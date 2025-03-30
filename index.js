@@ -1,29 +1,50 @@
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
 
+var books = [
+    {
+      title: 'The Awakening',
+      author: 'Kate Chopin',
+      id:"1"
+    },
+    {
+      title: 'City of Glass',
+      author: 'Paul Auster',
+      id:"2"
+    },
+    {
+      title: 'Parts of Life',
+      author: 'Praveen',
+      id:"3"
+    },
+    {
+      title: 'Tomorrow Never Dies',
+      author: 'Srikanth',
+      id:"4"
+    }
+];
+
 const typeDefs = `
-    type Payment {
-        "username":String,
-        "amount":Int,
-        "timestamp":String,
-        "modeofPayment":String,
-        "transactionID":String
+    type Book {
+        title: String
+        author: String
+        id:ID
     }
-
+    
     type Query {
-        getAllPayments: [Payment]
-        getPaymentById(id:ID!):[Payment]
+        getAllBooks: [Book]
+        getBookById(id:ID!):Book
     }
-
     type Mutation {
-        makePayment(username:String,amount:Int,timestamp:String,modeofPayment:String,transactionID:String):Payment
-        deletePayment(id:ID!):Payment
+        createBook(title:String!,author:String):Book
+        deleteBook(id:ID!):Book
+        updateBook(title:String!,author:String,id:ID!):Book
     }
 `;
 
 const resolvers = {
     Query: {
-      kithab: () => books,
+      getAllBooks: () => books,
       getBookById(parent, args, contextValue, info){
         return books.find(book=>{
             console.log(args);
@@ -32,6 +53,16 @@ const resolvers = {
       }
     },
     Mutation:{
+        updateBook:(_,args)=>{
+            var updatedBooks = books.map((book)=>{
+                if(book.id===args.id){
+                    return args
+                }
+                return book
+            })
+            books=updatedBooks
+            return args
+        },
         createBook:(_,args)=>{
             console.log("ikkadiki vachinda");
             var newBook = {

@@ -1,49 +1,29 @@
 import { ApolloServer } from '@apollo/server';
 import { startStandaloneServer } from '@apollo/server/standalone';
 
-var books = [
-    {
-      title: 'The Awakening',
-      author: 'Kate Chopin',
-      id:"1"
-    },
-    {
-      title: 'City of Glass',
-      author: 'Paul Auster',
-      id:"2"
-    },
-    {
-      title: 'Jeevitham',
-      author: 'Praveen',
-      id:"3"
-    },
-    {
-      title: 'Nee MOham',
-      author: 'Srikanth',
-      id:"4"
-    }
-];
-
 const typeDefs = `
-    type Book {
-        title: String
-        author: String
-        id:ID
+    type Payment {
+        "username":String,
+        "amount":Int,
+        "timestamp":String,
+        "modeofPayment":String,
+        "transactionID":String
     }
-    
+
     type Query {
-        getAllBooks: [Book]
-        getBookById(id:ID!):Book
+        getAllPayments: [Payment]
+        getPaymentById(id:ID!):[Payment]
     }
+
     type Mutation {
-        createBook(title:String!,author:String):Book
-        deleteBook(id:ID!):Book
+        makePayment(username:String,amount:Int,timestamp:String,modeofPayment:String,transactionID:String):Payment
+        deletePayment(id:ID!):Payment
     }
 `;
 
 const resolvers = {
     Query: {
-      getAllBooks: () => books,
+      kithab: () => books,
       getBookById(parent, args, contextValue, info){
         return books.find(book=>{
             console.log(args);
